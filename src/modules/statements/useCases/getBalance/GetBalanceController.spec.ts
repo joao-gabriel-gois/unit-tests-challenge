@@ -6,19 +6,19 @@ import { app } from '../../../../app';
 import { hash } from 'bcryptjs';
 
 
-let connection: Connection;
+let connection: Connection | undefined;
 const APIv = '/api/v1';
 
 describe('Get Balance Controller', () => {
 
   beforeAll(async () => {
     connection = await createConnection();
-    await connection.runMigrations();
+    await connection!.runMigrations();
 
     const id = uuid();
     const password = await hash('admin', 8);
 
-    await connection.query(
+    await connection!.query(
       `INSERT INTO USERS(id, name, email, password, created_at, updated_at)
       values('${id}', 'admin', 'admin@rentx.dev', '${password}', 'now()', 'now()')`
     );
@@ -26,8 +26,8 @@ describe('Get Balance Controller', () => {
 
 
   afterAll(async () => {
-    await connection.dropDatabase();
-    await connection.close();
+    await connection!.dropDatabase();
+    await connection!.close();
   });
 
   it('should be able to get balance', async () => {

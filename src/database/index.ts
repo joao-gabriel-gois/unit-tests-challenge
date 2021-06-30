@@ -12,13 +12,23 @@ if (process.env.NODE_ENV === 'test') {
         name: 'default'
       })
     );
-
   };
 }
 
 else {
-  createConnection();
-  connection = async () => undefined;
+  connection = async (): Promise<Connection> => {
+    const defaultOptions = await getConnectionOptions();
+
+    return createConnection(
+      Object.assign(defaultOptions, {
+        database: 'fin_api',
+        // name: 'default'
+      })
+    );
+  };
+
+  // createConnection();
+  // connection = async () => undefined;
 }
 
 export default connection;

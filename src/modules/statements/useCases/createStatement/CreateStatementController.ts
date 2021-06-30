@@ -1,3 +1,4 @@
+import { Mapper } from '../../mappers/Mapper';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -26,6 +27,8 @@ export class CreateStatementController {
       description
     });
 
-    return response.status(201).json(statement);
+    const statementDTO = Mapper.statementToDTO(statement)
+
+    return response.status(201).json(statementDTO);
   }
 }
