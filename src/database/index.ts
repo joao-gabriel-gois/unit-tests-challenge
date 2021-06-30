@@ -1,18 +1,24 @@
 import { Connection, createConnection, getConnectionOptions } from 'typeorm';
+let connection: () => Promise<Connection | undefined>;
 
-// export default async (host = 'database'): Promise<Connection> => {
-//   const defaultOptions = await getConnectionOptions();
+if (process.env.NODE_ENV === 'test') {
+  connection = async (): Promise<Connection> => {
+    const defaultOptions = await getConnectionOptions();
 
-//   return createConnection(
-//     Object.assign(defaultOptions, {
-//       host: process.env.NODE_ENV === 'test' ? 'localhost' : host,
-//       database:
-//         process.env.NODE_ENV === 'test'
-//         ? 'fin_api_test'
-//         : defaultOptions.database,
-//       name: 'default'
-//     })
-//   );
-// };
+    return createConnection(
+      Object.assign(defaultOptions, {
+        host: 'localhost',
+        database: 'fin_api_test',
+        name: 'default'
+      })
+    );
 
-createConnection();
+  };
+}
+
+else {
+  createConnection();
+  connection = async () => undefined;
+}
+
+export default connection;

@@ -26,6 +26,10 @@ export default class TransferUseCase {
       throw new TransferError.UserNotFound();
     }
 
+    if (sender_id === recipient_id || sender.id === recipient.id) {
+      throw new TransferError.TransferToSameUser();
+    }
+
     const { balance: senderBalance } = await this.statementsRepository.getUserBalance({ user_id: sender_id });
 
     if (senderBalance < amount) {
